@@ -11,8 +11,19 @@
         <div class="game-info">
             <div class="score">Score: <span id="score">0</span></div>
             <div class="level">Level: <span id="level">1</span></div>
+            <button id="pauseButton">Pause</button>
         </div>
-        <canvas id="gameCanvas"></canvas>
+        <div class="game-area">
+            <canvas id="gameCanvas"></canvas>
+            <div class="controls">
+                <button id="leftBtn">←</button>
+                <div class="vertical-controls">
+                    <button id="rotateBtn">↻</button>
+                    <button id="downBtn">↓</button>
+                </div>
+                <button id="rightBtn">→</button>
+            </div>
+        </div>
     </div>
     <script src="tetris.js"></script>
 </body>

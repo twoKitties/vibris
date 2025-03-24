@@ -26,7 +26,53 @@ body {
     gap: 10px;
 }
 
+.game-area {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 #gameCanvas {
     border: 2px solid #333;
     background-color: #000;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+}
+
+.vertical-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#pauseButton, #leftBtn, #rightBtn, #rotateBtn, #downBtn {
+    padding: 15px 25px;
+    font-size: 24px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#pauseButton:hover, #leftBtn:hover, #rightBtn:hover, #rotateBtn:hover, #downBtn:hover {
+    background-color: #444;
+}
+
+#pauseButton:active, #leftBtn:active, #rightBtn:active, #rotateBtn:active, #downBtn:active {
+    background-color: #555;
+}
+
+@media (min-width: 768px) {
+    .controls {
+        display: none;
+    }
 } 

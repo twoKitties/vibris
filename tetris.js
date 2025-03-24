@@ -30,14 +30,86 @@ class Tetris {
         this.gameOver = false;
         this.currentPiece = null;
         this.currentPieceColor = '';
+        this.isPaused = false;
+        this.gameLoop = null;
         this.init();
     }
 
     init() {
         this.spawnPiece();
         this.updateScore();
-        this.gameLoop();
+        this.startGameLoop();
         this.setupControls();
+        this.setupPauseButton();
+        this.setupTouchControls();
+    }
+
+    setupTouchControls() {
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
+        const downBtn = document.getElementById('downBtn');
+        const rotateBtn = document.getElementById('rotateBtn');
+
+        leftBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.movePiece(-1, 0);
+            this.draw();
+        });
+
+        rightBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.movePiece(1, 0);
+            this.draw();
+        });
+
+        downBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.movePiece(0, 1);
+            this.draw();
+        });
+
+        rotateBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.rotatePiece();
+            this.draw();
+        });
+    }
+
+    setupPauseButton() {
+        const pauseButton = document.getElementById('pauseButton');
+        pauseButton.addEventListener('click', () => this.togglePause());
+    }
+
+    togglePause() {
+        this.isPaused = !this.isPaused;
+        const pauseButton = document.getElementById('pauseButton');
+        pauseButton.textContent = this.isPaused ? 'Resume' : 'Pause';
+        
+        if (this.isPaused) {
+            this.drawPauseScreen();
+        } else {
+            this.startGameLoop();
+        }
+    }
+
+    drawPauseScreen() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#fff';
+        ctx.font = '30px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
+    }
+
+    startGameLoop() {
+        if (this.gameLoop) {
+            clearTimeout(this.gameLoop);
+        }
+        if (!this.gameOver && !this.isPaused) {
+            this.movePiece(0, 1);
+            this.draw();
+            this.gameLoop = setTimeout(() => this.startGameLoop(), 1000 / this.level);
+        }
     }
 
     spawnPiece() {
@@ -71,6 +143,7 @@ class Tetris {
     }
 
     rotatePiece() {
+        if (this.isPaused) return;
         const rotated = this.currentPiece[0].map((_, i) =>
             this.currentPiece.map(row => row[i]).reverse()
         );
@@ -82,6 +155,7 @@ class Tetris {
     }
 
     movePiece(dx, dy) {
+        if (this.isPaused) return;
         this.currentPieceX += dx;
         this.currentPieceY += dy;
 
@@ -193,14 +267,6 @@ class Tetris {
             }
             this.draw();
         });
-    }
-
-    gameLoop() {
-        if (!this.gameOver) {
-            this.movePiece(0, 1);
-            this.draw();
-            setTimeout(() => this.gameLoop(), 1000 / this.level);
-        }
     }
 }
 
