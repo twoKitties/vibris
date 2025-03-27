@@ -11,11 +11,14 @@ body {
     align-items: center;
     min-height: 100vh;
     font-family: Arial, sans-serif;
+    padding: 10px;
 }
 
 .game-container {
     display: flex;
+    flex-direction: column;
     gap: 20px;
+    max-width: 100%;
 }
 
 .game-info {
@@ -24,17 +27,21 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    text-align: center;
 }
 
 .game-area {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    align-items: center;
 }
 
 #gameCanvas {
     border: 2px solid #333;
     background-color: #000;
+    max-width: 100%;
+    height: auto;
 }
 
 .controls {
@@ -42,6 +49,8 @@ body {
     justify-content: center;
     gap: 20px;
     align-items: center;
+    width: 100%;
+    max-width: 300px;
 }
 
 .vertical-controls {
@@ -61,6 +70,11 @@ body {
     transition: background-color 0.2s;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    min-width: 60px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #pauseButton:hover, #leftBtn:hover, #rightBtn:hover, #rotateBtn:hover, #downBtn:hover {
@@ -72,7 +86,11 @@ body {
 }
 
 @media (min-width: 768px) {
-    .controls {
-        display: none;
+    .game-container {
+        flex-direction: row;
+    }
+    
+    .game-info {
+        text-align: left;
     }
 } 

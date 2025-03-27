@@ -32,6 +32,7 @@ class Tetris {
         this.currentPieceColor = '';
         this.isPaused = false;
         this.gameLoop = null;
+        this.touchInterval = null;
         this.init();
     }
 
@@ -50,28 +51,66 @@ class Tetris {
         const downBtn = document.getElementById('downBtn');
         const rotateBtn = document.getElementById('rotateBtn');
 
-        leftBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.movePiece(-1, 0);
-            this.draw();
-        });
+        const startMovement = (action) => {
+            if (this.touchInterval) {
+                clearInterval(this.touchInterval);
+            }
 
-        rightBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.movePiece(1, 0);
-            this.draw();
-        });
+            const moveInterval = 100; // Movement interval in milliseconds
 
-        downBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.movePiece(0, 1);
-            this.draw();
-        });
+            this.touchInterval = setInterval(() => {
+                if (!this.isPaused && !this.gameOver) {
+                    switch(action) {
+                        case 'leftBtn':
+                            this.movePiece(-1, 0);
+                            break;
+                        case 'rightBtn':
+                            this.movePiece(1, 0);
+                            break;
+                        case 'downBtn':
+                            this.movePiece(0, 1);
+                            break;
+                    }
+                    this.draw();
+                }
+            }, moveInterval);
+        };
 
-        rotateBtn.addEventListener('touchstart', (e) => {
+        const stopMovement = () => {
+            if (this.touchInterval) {
+                clearInterval(this.touchInterval);
+                this.touchInterval = null;
+            }
+        };
+
+        const handleStart = (e) => {
             e.preventDefault();
-            this.rotatePiece();
-            this.draw();
+            const action = e.currentTarget.id;
+            
+            if (action === 'rotateBtn') {
+                this.rotatePiece();
+                this.draw();
+            } else {
+                startMovement(action);
+            }
+        };
+
+        const handleEnd = (e) => {
+            e.preventDefault();
+            stopMovement();
+        };
+
+        // Add event listeners for both touch and mouse events
+        [leftBtn, rightBtn, downBtn, rotateBtn].forEach(btn => {
+            // Touch events
+            btn.addEventListener('touchstart', handleStart);
+            btn.addEventListener('touchend', handleEnd);
+            btn.addEventListener('touchcancel', handleEnd);
+            
+            // Mouse events
+            btn.addEventListener('mousedown', handleStart);
+            btn.addEventListener('mouseup', handleEnd);
+            btn.addEventListener('mouseleave', handleEnd);
         });
     }
 
@@ -148,9 +187,23 @@ class Tetris {
             this.currentPiece.map(row => row[i]).reverse()
         );
         const previousPiece = this.currentPiece;
+        const previousX = this.currentPieceX;
+        
+        // Try rotation
         this.currentPiece = rotated;
+        
+        // If rotation causes collision, try shifting left
         if (this.checkCollision()) {
-            this.currentPiece = previousPiece;
+            this.currentPieceX -= 1;
+            if (this.checkCollision()) {
+                // If shifting left doesn't work, try shifting right
+                this.currentPieceX += 2;
+                if (this.checkCollision()) {
+                    // If neither works, revert to original state
+                    this.currentPiece = previousPiece;
+                    this.currentPieceX = previousX;
+                }
+            }
         }
     }
 
