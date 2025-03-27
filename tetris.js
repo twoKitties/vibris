@@ -42,7 +42,41 @@ class Tetris {
         this.startGameLoop();
         this.setupControls();
         this.setupPauseButton();
+        this.setupNewGameButton();
         this.setupTouchControls();
+    }
+
+    setupNewGameButton() {
+        const newGameButton = document.getElementById('newGameButton');
+        newGameButton.addEventListener('click', () => this.startNewGame());
+    }
+
+    startNewGame() {
+        // Reset game state
+        this.board = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
+        this.score = 0;
+        this.level = 1;
+        this.gameOver = false;
+        this.isPaused = false;
+        
+        // Clear intervals
+        if (this.gameLoop) {
+            clearTimeout(this.gameLoop);
+            this.gameLoop = null;
+        }
+        if (this.touchInterval) {
+            clearInterval(this.touchInterval);
+            this.touchInterval = null;
+        }
+
+        // Reset UI
+        document.getElementById('pauseButton').textContent = 'Pause';
+        this.updateScore();
+        
+        // Start new game
+        this.spawnPiece();
+        this.startGameLoop();
+        this.draw();
     }
 
     setupTouchControls() {

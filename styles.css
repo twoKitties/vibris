@@ -59,7 +59,7 @@ body {
     gap: 10px;
 }
 
-#pauseButton, #leftBtn, #rightBtn, #rotateBtn, #downBtn {
+#pauseButton, #newGameButton, #leftBtn, #rightBtn, #rotateBtn, #downBtn {
     padding: 15px 25px;
     font-size: 24px;
     background-color: #333;
@@ -75,13 +75,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
-#pauseButton:hover, #leftBtn:hover, #rightBtn:hover, #rotateBtn:hover, #downBtn:hover {
+#pauseButton:hover, #newGameButton:hover, #leftBtn:hover, #rightBtn:hover, #rotateBtn:hover, #downBtn:hover {
     background-color: #444;
 }
 
-#pauseButton:active, #leftBtn:active, #rightBtn:active, #rotateBtn:active, #downBtn:active {
+#pauseButton:active, #newGameButton:active, #leftBtn:active, #rightBtn:active, #rotateBtn:active, #downBtn:active {
     background-color: #555;
 }
 
